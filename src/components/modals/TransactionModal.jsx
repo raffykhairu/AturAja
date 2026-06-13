@@ -21,13 +21,7 @@ export default function TransactionModal({ transaction, onSave, onClose }) {
   });
   const [error, setError] = useState('');
 
-  // Auto-select kategori pertama saat tipe berubah
-  useEffect(() => {
-    const availableCats = categories[form.type] || [];
-    if (availableCats.length > 0 && !availableCats.find(c => c.id === form.categoryId)) {
-      setForm(f => ({ ...f, categoryId: availableCats[0].id }));
-    }
-  }, [form.type]);
+  // Kategori default akan di-set saat mengubah tipe transaksi
 
   const currentCats = categories[form.type] || [];
 
@@ -77,7 +71,7 @@ export default function TransactionModal({ transaction, onSave, onClose }) {
           <div className={`flex gap-2 p-1 rounded-xl ${isDark ? 'bg-gray-800' : 'bg-gray-100'}`}>
             <TypeBtn
               active={form.type === 'income'}
-              onClick={() => setForm(f => ({ ...f, type: 'income', categoryId: '' }))}
+              onClick={() => setForm(f => ({ ...f, type: 'income', categoryId: categories.income?.[0]?.id || '' }))}
               icon={<TrendingUp size={15} />}
               label="Uang Masuk"
               color="text-emerald-400"
@@ -86,7 +80,7 @@ export default function TransactionModal({ transaction, onSave, onClose }) {
             />
             <TypeBtn
               active={form.type === 'expense'}
-              onClick={() => setForm(f => ({ ...f, type: 'expense', categoryId: '' }))}
+              onClick={() => setForm(f => ({ ...f, type: 'expense', categoryId: categories.expense?.[0]?.id || '' }))}
               icon={<TrendingDown size={15} />}
               label="Uang Keluar"
               color="text-red-400"

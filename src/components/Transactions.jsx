@@ -5,13 +5,13 @@ import {
   deleteTransaction, formatRupiah, BULAN_ID
 } from '../utils/storage';
 import TransactionModal from './modals/TransactionModal';
-import { Plus, Search, Trash2, Pencil, TrendingUp, TrendingDown, Filter, X } from 'lucide-react';
+import { Plus, Search, Trash2, Pencil, X } from 'lucide-react';
 
 export default function Transactions() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
-  const [transactions, setTransactions] = useState([]);
-  const [categories, setCategories] = useState({ income: [], expense: [] });
+  const [transactions, setTransactions] = useState(getTransactions);
+  const [categories, setCategories] = useState(getCategories);
   const [showModal, setShowModal] = useState(false);
   const [editingTx, setEditingTx] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
@@ -26,8 +26,6 @@ export default function Transactions() {
     setTransactions(getTransactions());
     setCategories(getCategories());
   };
-
-  useEffect(() => { reload(); }, []);
 
   const allCats = useMemo(() => [
     ...(categories.income || []),

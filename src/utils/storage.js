@@ -331,7 +331,7 @@ export const importData = (jsonData) => {
     if (data.savingsAllocations) saveSavingsAllocations(data.savingsAllocations);
     if (data.categories) saveCategories(data.categories);
     return { success: true, message: 'Data berhasil diimport!' };
-  } catch (err) {
+  } catch {
     return { success: false, message: 'Format file tidak valid. Pastikan file JSON dari AturAja.' };
   }
 };
