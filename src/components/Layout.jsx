@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useTheme } from '../App';
+import { useAuth } from '../contexts/AuthContext';
 import {
   LayoutDashboard, ArrowLeftRight, PiggyBank, Target,
   BarChart3, Download, Tags, Menu, X, Sun, Moon,
-  Wallet, ChevronRight
+  Wallet, ChevronRight, User, LogOut
 } from 'lucide-react';
 
 // ===================================
@@ -21,6 +22,7 @@ const NAV_ITEMS = [
 
 export default function Layout({ activePage, setActivePage, children }) {
   const { theme, toggleTheme } = useTheme();
+  const { userProfile, logout, requireAuth } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isDark = theme === 'dark';
 
@@ -93,8 +95,8 @@ export default function Layout({ activePage, setActivePage, children }) {
           ))}
         </nav>
 
-        {/* Theme Toggle */}
-        <div className={`p-4 border-t ${isDark ? 'border-gray-800' : 'border-gray-100'}`}>
+        {/* Theme Toggle & User Auth */}
+        <div className={`p-4 border-t ${isDark ? 'border-gray-800' : 'border-gray-100'} flex flex-col gap-2`}>
           <button
             onClick={toggleTheme}
             className={`
@@ -106,6 +108,40 @@ export default function Layout({ activePage, setActivePage, children }) {
             {isDark ? <Sun size={18} /> : <Moon size={18} />}
             <span>{isDark ? 'Mode Terang' : 'Mode Gelap'}</span>
           </button>
+
+          <div className="h-px bg-gray-200 dark:bg-gray-800 my-1"></div>
+
+          {userProfile ? (
+            <div className={`flex items-center justify-between px-3 py-2 rounded-xl ${isDark ? 'bg-white/5' : 'bg-gray-50'}`}>
+              <div className="flex items-center gap-2 overflow-hidden">
+                <div className="w-8 h-8 rounded-full bg-violet-500/20 text-violet-600 flex items-center justify-center shrink-0">
+                  <User size={16} />
+                </div>
+                <div className="truncate">
+                  <p className="text-sm font-semibold truncate">{userProfile.name}</p>
+                  {userProfile.email && <p className="text-[10px] text-gray-500 truncate">{userProfile.email}</p>}
+                </div>
+              </div>
+              <button 
+                onClick={logout}
+                className="p-1.5 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors shrink-0 ml-2"
+                title="Logout"
+              >
+                <LogOut size={16} />
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => requireAuth(() => {})}
+              className={`
+                w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-violet-600
+                transition-all duration-200 hover:bg-violet-500/10
+              `}
+            >
+              <User size={18} />
+              <span>Login / Daftar</span>
+            </button>
+          )}
         </div>
       </aside>
 

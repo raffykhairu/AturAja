@@ -5,9 +5,11 @@ import {
   formatRupiah, getTransactionsByMonth, BULAN_ID
 } from '../utils/storage';
 import { Plus, X, Wallet, ChevronDown, Check, Trash2 } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function Budget() {
   const { theme } = useTheme();
+  const { requireAuth } = useAuth();
   const isDark = theme === 'dark';
   const now = new Date();
   const [selectedMonth, setSelectedMonth] = useState(() => {
@@ -52,20 +54,24 @@ export default function Budget() {
   }, [categories, monthBudgets]);
 
   const handleAddBudget = () => {
-    if (!form.categoryId || !form.amount || Number(form.amount) <= 0) return;
-    upsertBudget({
-      categoryId: form.categoryId,
-      month: selectedMonth,
-      amount: Number(form.amount),
+    requireAuth(() => {
+      if (!form.categoryId || !form.amount || Number(form.amount) <= 0) return;
+      upsertBudget({
+        categoryId: form.categoryId,
+        month: selectedMonth,
+        amount: Number(form.amount),
+      });
+      setForm({ categoryId: '', amount: '' });
+      setShowForm(false);
+      reload();
     });
-    setForm({ categoryId: '', amount: '' });
-    setShowForm(false);
-    reload();
   };
 
   const handleDelete = (id) => {
-    deleteBudget(id);
-    reload();
+    requireAuth(() => {
+      deleteBudget(id);
+      reload();
+    });
   };
 
   const getCat = (id) => (categories.expense || []).find(c => c.id === id);

@@ -9,6 +9,7 @@ import Reports from './components/Reports';
 import ExportImport from './components/ExportImport';
 import Categories from './components/Categories';
 import OnboardingModal from './components/modals/OnboardingModal';
+import { AuthProvider } from './contexts/AuthContext';
 
 // ===================================
 // Theme Context
@@ -62,18 +63,20 @@ export default function App() {
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      <div className={theme === 'dark'
-        ? 'min-h-screen bg-gray-950 text-gray-100'
-        : 'min-h-screen bg-gray-50 text-gray-900'
-      }>
-        <Layout activePage={activePage} setActivePage={setActivePage}>
-          {renderPage()}
-        </Layout>
+      <AuthProvider>
+        <div className={theme === 'dark'
+          ? 'min-h-screen bg-gray-950 text-gray-100'
+          : 'min-h-screen bg-gray-50 text-gray-900'
+        }>
+          <Layout activePage={activePage} setActivePage={setActivePage}>
+            {renderPage()}
+          </Layout>
 
-        {showOnboarding && (
-          <OnboardingModal onClose={() => setShowOnboarding(false)} />
-        )}
-      </div>
+          {showOnboarding && (
+            <OnboardingModal onClose={() => setShowOnboarding(false)} />
+          )}
+        </div>
+      </AuthProvider>
     </ThemeContext.Provider>
   );
 }

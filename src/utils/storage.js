@@ -13,6 +13,7 @@ const KEYS = {
   LAST_BACKUP: 'aturaja_last_backup',
   ONBOARDING_DONE: 'aturaja_onboarding_done',
   SAVINGS_ALLOCATIONS: 'aturaja_savings_allocations',
+  USER_PROFILE: 'aturaja_user_profile',
 };
 
 // Kategori default bawaan
@@ -44,6 +45,21 @@ const safeJSON = (str, fallback = null) => {
   } catch {
     return fallback;
   }
+};
+
+// ===================================
+// PROFIL PENGGUNA
+// ===================================
+export const getUserProfile = () => {
+  return safeJSON(localStorage.getItem(KEYS.USER_PROFILE), null);
+};
+
+export const saveUserProfile = (profile) => {
+  localStorage.setItem(KEYS.USER_PROFILE, JSON.stringify(profile));
+};
+
+export const removeUserProfile = () => {
+  localStorage.removeItem(KEYS.USER_PROFILE);
 };
 
 // ===================================

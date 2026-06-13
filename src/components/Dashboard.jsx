@@ -10,12 +10,14 @@ import {
   Plus, TrendingUp, TrendingDown, Wallet, ArrowRight,
   Download, Bell, Sparkles
 } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 
 // ===================================
 // Dashboard Page
 // ===================================
 export default function Dashboard({ setActivePage }) {
   const { theme } = useTheme();
+  const { requireAuth } = useAuth();
   const isDark = theme === 'dark';
   const [transactions, setTransactions] = useState([]);
   const [categories, setCategories] = useState({ income: [], expense: [] });
@@ -106,7 +108,7 @@ export default function Dashboard({ setActivePage }) {
         <QuickAction
           icon={<Plus size={20} />}
           label="Catat Transaksi"
-          onClick={() => setShowModal(true)}
+          onClick={() => requireAuth(() => setShowModal(true))}
           primary
           isDark={isDark}
         />
@@ -143,7 +145,7 @@ export default function Dashboard({ setActivePage }) {
         </div>
 
         {recentTx.length === 0 ? (
-          <EmptyState isDark={isDark} onAdd={() => setShowModal(true)} />
+          <EmptyState isDark={isDark} onAdd={() => requireAuth(() => setShowModal(true))} />
         ) : (
           <div className="space-y-3">
             {recentTx.map(tx => {

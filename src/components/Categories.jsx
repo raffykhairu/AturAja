@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 import { useTheme } from '../App';
 import { getCategories, addCategory, deleteCategory } from '../utils/storage';
 import { Plus, X, Trash2, Tags } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 
 const DEFAULT_ICONS = ['🍜', '🚗', '🛍️', '🎮', '📚', '💊', '📱', '✈️', '🏠', '💰', '🎁', '💼', '☕', '🎵', '🏋️', '🐶', '🎂', '⚽', '📷', '🌸', '🔧', '💡', '🎯', '🌮'];
 const DEFAULT_COLORS = ['#8b5cf6', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#06b6d4', '#6366f1', '#84cc16', '#f97316', '#14b8a6', '#a855f7'];
 
 export default function Categories() {
   const { theme } = useTheme();
+  const { requireAuth } = useAuth();
   const isDark = theme === 'dark';
   const [categories, setCategories] = useState({ income: [], expense: [] });
   const [activeTab, setActiveTab] = useState('expense');
@@ -107,7 +109,7 @@ export default function Categories() {
             {customCats.length} kategori
           </h2>
           <button
-            onClick={() => setShowForm(!showForm)}
+            onClick={() => requireAuth(() => setShowForm(!showForm))}
             className="btn-primary py-1.5 px-3 text-xs"
           >
             <Plus size={13} /> Tambah
@@ -202,7 +204,7 @@ export default function Categories() {
                 </div>
                 <span className="text-sm font-medium flex-1 truncate">{cat.name}</span>
                 <button
-                  onClick={() => setDeleteConfirm({ type: activeTab, id: cat.id, name: cat.name })}
+                  onClick={() => requireAuth(() => setDeleteConfirm({ type: activeTab, id: cat.id, name: cat.name }))}
                   className="opacity-0 group-hover:opacity-100 p-1 rounded-lg hover:bg-red-500/10 text-gray-400 hover:text-red-400 transition-all shrink-0"
                 >
                   <Trash2 size={13} />

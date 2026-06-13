@@ -5,9 +5,11 @@ import {
   allocateToGoal, formatRupiah
 } from '../utils/storage';
 import { Plus, X, Check, Trash2, Target, Plus as PlusIcon, ChevronDown } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function SavingsGoals() {
   const { theme } = useTheme();
+  const { requireAuth } = useAuth();
   const isDark = theme === 'dark';
   const [goals, setGoals] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -72,7 +74,7 @@ export default function SavingsGoals() {
             Wujudkan impianmu satu per satu ✨
           </p>
         </div>
-        <button onClick={() => setShowForm(true)} className="btn-primary">
+        <button onClick={() => requireAuth(() => setShowForm(true))} className="btn-primary">
           <Plus size={16} /> Buat Target
         </button>
       </div>
@@ -184,7 +186,7 @@ export default function SavingsGoals() {
 
       {/* ── Goals List ── */}
       {goals.length === 0 && !showForm ? (
-        <EmptyGoals isDark={isDark} onAdd={() => setShowForm(true)} />
+        <EmptyGoals isDark={isDark} onAdd={() => requireAuth(() => setShowForm(true))} />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">
           {goals.map(goal => {
@@ -216,7 +218,7 @@ export default function SavingsGoals() {
                     </div>
                   </div>
                   <button
-                    onClick={() => setDeleteConfirm(goal.id)}
+                    onClick={() => requireAuth(() => setDeleteConfirm(goal.id))}
                     className="opacity-0 group-hover:opacity-100 p-1.5 rounded-lg hover:bg-red-500/10 text-gray-400 hover:text-red-400 transition-all"
                   >
                     <Trash2 size={14} />
@@ -252,7 +254,7 @@ export default function SavingsGoals() {
                 {/* Allocate Button */}
                 {!isDone && (
                   <button
-                    onClick={() => setAllocateModal(goal.id)}
+                    onClick={() => requireAuth(() => setAllocateModal(goal.id))}
                     className={`w-full py-2 rounded-xl text-sm font-semibold border transition-all
                       ${isDark ? 'border-gray-700 hover:border-violet-500/50 hover:text-violet-400 text-gray-400' : 'border-gray-200 hover:border-violet-300 hover:text-violet-600 text-gray-500'}`}
                   >

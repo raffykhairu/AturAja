@@ -6,9 +6,11 @@ import {
 } from '../utils/storage';
 import TransactionModal from './modals/TransactionModal';
 import { Plus, Search, Trash2, Pencil, X } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function Transactions() {
   const { theme } = useTheme();
+  const { requireAuth } = useAuth();
   const isDark = theme === 'dark';
   const [transactions, setTransactions] = useState(getTransactions);
   const [categories, setCategories] = useState(getCategories);
@@ -65,20 +67,24 @@ export default function Transactions() {
   }, [filtered]);
 
   const handleSave = (formData) => {
-    if (editingTx) {
-      updateTransaction(editingTx.id, formData);
-    } else {
-      addTransaction(formData);
-    }
-    setEditingTx(null);
-    setShowModal(false);
-    reload();
+    requireAuth(() => {
+      if (editingTx) {
+        updateTransaction(editingTx.id, formData);
+      } else {
+        addTransaction(formData);
+      }
+      setEditingTx(null);
+      setShowModal(false);
+      reload();
+    });
   };
 
   const handleDelete = (id) => {
-    deleteTransaction(id);
-    setDeleteConfirm(null);
-    reload();
+    requireAuth(() => {
+      deleteTransaction(id);
+      setDeleteConfirm(null);
+      reload();
+    });
   };
 
   const hasActiveFilter = filterType !== 'all' || filterCat !== 'all' || filterMonth || search;
